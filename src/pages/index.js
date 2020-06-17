@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as FavoriteActions from '../store/actions/favorites';
+import { Creators as FavoriteActions } from '../store/ducks/favorites';
 
 class Main extends React.Component {
   state = {
@@ -12,6 +12,7 @@ class Main extends React.Component {
     event.preventDefault();
 
     this.props.addFavoriteRequest(this.state.repositoryValue);
+
     this.setState({ repositoryValue: '' });
   };
 
@@ -27,10 +28,15 @@ class Main extends React.Component {
           ></input>
 
           <button type="submit">Adicionar</button>
+          {this.props.favorites.loading && <span>Carregando...</span>}
+
+          {!!this.props.favorites.error && (
+            <span style={{ color: '#f00' }}>{this.props.favorites.error}</span>
+          )}
         </form>
 
         <ul>
-          {this.props.favorites.map(elem => {
+          {this.props.favorites.data.map(elem => {
             return (
               <li key={elem.id}>
                 <p>
